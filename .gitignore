@@ -222,5 +222,4 @@ venv/
 .DS_Store
 
 # === PyCharm ===
-.idea/
 /mimii_id00.zip
