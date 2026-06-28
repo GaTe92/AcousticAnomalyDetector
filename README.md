@@ -100,6 +100,31 @@ Upload a `.wav` from `data/mimii/fan/id_00/test/` and analyse.
 
 ---
 
+## Dataset
+
+This project uses the **MIMII Dataset** (Malfunctioning Industrial Machine
+Investigation and Inspection) by Hitachi.
+
+**Download:** https://zenodo.org/record/3384388
+
+You only need the **`fan`** machine type at **0 dB** — specifically `id_00`.
+The other IDs (`id_02`, `id_04`, `id_06`) and other machine types
+(pump, slider, valve) are **not** required for this project.
+
+After downloading and unzipping, run the split script to create the
+train/test folders:
+
+```bash
+python src/Data_Separation/setup_data.py
+# → train/normal: 860 · test/normal: 151 · test/abnormal: 407
+```
+
+The raw audio is **not** included in the repo (too large) and is excluded via
+`.gitignore`. Only the trained model artifacts in `models/` are committed, so
+the API runs out of the box without retraining.
+
+---
+
 ## Project layout
 
 ```
