@@ -5,7 +5,7 @@ soundfile==0.12.1
 # ML
 tensorflow==2.19.0
 numpy==1.26.4
-scitkit-learn==1.5.2
+scikit-learn==1.5.2
 
 # API
 fastapi==0.115.0

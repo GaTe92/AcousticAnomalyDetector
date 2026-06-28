@@ -3,16 +3,26 @@ import shutil
 from pathlib import Path
 
 from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 
 from src.inference.detector import AnomalyDetector
+from src.diagnosis.provider import MockProvider
 
 ARTIFACTS = Path(__file__).resolve().parents[2] / "models"
 detector = AnomalyDetector(ARTIFACTS)
+diagnosis_provider = MockProvider()
 
 app = FastAPI(
     title="Acoustic Anomaly Detector",
     description="Detects anomalies in industrials machine sounds.",
     version="0.1.0",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 @app.get("/health")
@@ -38,10 +48,13 @@ async def predict(file: UploadFile = File(...)):
     finally:
         tmp_path.unlink(missing_ok=True)
 
+    diagnosis = diagnosis_provider.generate(result)
+
     return{
-        "filensmr": file.filename,
+        "filename": file.filename,
         "anomaly_score": result["anomaly_score"],
         "is_anomaly": result["is_anomaly"],
         "threshold": result["threshold"],
         "n_windows": result["n_windows"],
+        "diagnosis": diagnosis,
     }
