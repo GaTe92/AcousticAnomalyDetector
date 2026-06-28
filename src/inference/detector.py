@@ -30,6 +30,8 @@ class AnomalyDetector:
 
         self.band_weights = np.load(artifacts_dir / "band_weights.npy")
 
+        self.threshold = float(np.load(artifacts_dir / "threshold.npy")[0])
+
     # Feature extraction
     def _extract_windows(self, y: np.ndarray) -> np.ndarray:
         """Audio signal -> array of normalized Mel-Spectogram windows"""
@@ -66,6 +68,8 @@ class AnomalyDetector:
 
         return {
             "anomaly_score": file_score,
+            "is_anomaly": bool(file_score >= self.threshold),
+            "threshold": self.threshold,
             "n_windows": int(len(weighted)),
             "window_scores": weighted.tolist(),
         }
